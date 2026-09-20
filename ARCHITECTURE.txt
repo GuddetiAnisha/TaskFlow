@@ -1,0 +1,36 @@
+TASKFLOW ARCHITECTURE
+
+                         User / Browser
+                               |
+                               | HTTP
+                               v
+                    +---------------------+
+                    | Streamlit Frontend  |
+                    | NodePort Service    |
+                    +----------+----------+
+                               |
+                   REST        |        REST
+                 +-------------+-------------+
+                 |                           |
+                 v                           v
+        +------------------+       +------------------+
+        | Task Service     |<------| Stats Service    |
+        | FastAPI          | REST  | FastAPI          |
+        | CRUD /tasks      |       | GET /stats       |
+        +--------+---------+       +------------------+
+                 |
+                 | SQL
+                 v
+        +------------------+
+        | PostgreSQL       |
+        | ClusterIP        |
+        +--------+---------+
+                 |
+                 v
+        +------------------+
+        | PersistentVolume |
+        | Claim (PVC)      |
+        +------------------+
+
+Task Service and Stats Service are independently horizontally scalable.
+PostgreSQL remains a single replica in this course prototype.
