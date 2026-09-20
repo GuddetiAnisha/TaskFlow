@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow
+      POSTGRES_DB: taskflow
+    volumes:
+      - taskflow-data:/var/lib/postgresql/data
+  task-service:
+    build: ./task-service
+    environment:
+      DATABASE_URL: postgresql://taskflow:taskflow@postgres:5432/taskflow
+    depends_on:
+      - postgres
+  stats-service:
+    build: ./stats-service
+    environment:
+      TASK_SERVICE_URL: http://task-service:8000
+    depends_on:
+      - task-service
+  frontend:
+    build: ./frontend
+    environment:
+      TASK_SERVICE_URL: http://task-service:8000
+      STATS_SERVICE_URL: http://stats-service:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - task-service
+      - stats-service
+volumes:
+  taskflow-data:
