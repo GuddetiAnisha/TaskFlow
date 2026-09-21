@@ -10,12 +10,19 @@ TaskFlow is a deliberately small cloud-native task manager designed to demonstra
 - **PostgreSQL**: separate database service.
 - **PVC**: keeps PostgreSQL data across pod restarts.
 
-Architecture:
+## Architecture Diagram
 
-Browser → Frontend → Task Service → PostgreSQL
-                 ↘ Stats Service → Task Service
+```mermaid
+flowchart TD
+    U[User / Web Browser] -->|HTTP| F[Frontend<br/>Streamlit<br/>Port 8501]
+    F -->|REST API| T[Task Service<br/>FastAPI<br/>Port 8000]
+    F -->|REST API| S[Statistics Service<br/>FastAPI<br/>Port 8000]
+    S -->|REST API| T
+    T -->|SQL| D[(PostgreSQL<br/>Port 5432)]
+    D --> P[(Persistent Volume Claim<br/>postgres-pvc)]
+```
 
-Only the frontend is externally exposed. The APIs and database use internal Kubernetes ClusterIP Services.
+Only the frontend is externally exposed. The Task Service, Statistics Service, and PostgreSQL use internal Kubernetes ClusterIP Services.
 
 ## REST endpoints
 
