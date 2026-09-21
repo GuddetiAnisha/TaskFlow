@@ -11,9 +11,9 @@ metadata:
 type: Opaque
 stringData:
   POSTGRES_USER: taskflow
-  POSTGRES_PASSWORD: change-me-before-submission
+  POSTGRES_PASSWORD: "12345"
   POSTGRES_DB: taskflow
-  DATABASE_URL: postgresql://taskflow:change-me-before-submission@postgres:5432/taskflow
+  DATABASE_URL: postgresql://taskflow:12345@postgres:5432/taskflow
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
